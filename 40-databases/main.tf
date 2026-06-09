@@ -79,3 +79,4 @@ resource "terraform_data" "redis" {
      ]
   }
 }
+
