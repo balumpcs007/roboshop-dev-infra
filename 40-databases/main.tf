@@ -39,6 +39,7 @@ resource "terraform_data" "mongodb" {
   }
 }
 
+
 # Redis
 resource "aws_instance" "redis" {
   ami           = local.ami_id
@@ -80,4 +81,47 @@ resource "terraform_data" "redis" {
      ]
   }
 }
+
+# Rabbitmq
+resource "aws_instance" "rabbitmq" {
+  ami           = local.ami_id
+  instance_type = "t3.micro"
+  vpc_security_group_ids = [local.rabbitmq_sg_id]
+  subnet_id = local.database_subnet_ids
+  
+
+  tags = merge(
+    local.common_tags,
+    {
+        Name = "${local.common_name_suffix}-rabbitmq"
+    }
+  )
+}
+
+resource "terraform_data" "rabbitmq" {
+  triggers_replace = [
+    aws_instance.rabbitmq.id
+  ]
+  
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    password    = "DevOps321"
+    host        = aws_instance.rabbitmq.private_ip
+  }
+
+  provisioner "file" {
+    source = "bootstrap.sh"
+    destination = "/tmp/bootstrap.sh"
+    
+  }
+
+  provisioner "remote-exec" {
+    inline = [ 
+        "chmod +x /tmp/bootstrap.sh",
+        "sudo sh /tmp/bootstrap.sh rabbitmq"
+     ]
+  }
+}
+
 
