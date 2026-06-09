@@ -3,7 +3,6 @@
 component=$1
 environment=$2
 dnf install ansible -y
-curl -sS https://webinstall.dev/k9s | bash
 # ansible-pull -U https://github.com/balumpcs007/ansible-roboshop-roles-tf.git -e component=$component main.yaml
 
 REPO_URL=https://github.com/balumpcs007/ansible-roboshop-roles-tf.git
