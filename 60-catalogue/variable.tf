@@ -9,6 +9,6 @@ variable "environment" {
 }
 
 variable "domain_name" {
-    default = daws89s.fun
+    default = "daws89s.fun"
   
 }
